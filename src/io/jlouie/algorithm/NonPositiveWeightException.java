@@ -20,6 +20,6 @@ package io.jlouie.algorithm;
  *
  * @author jlouie
  */
-public class NonPositiveWeightException extends RuntimeException{
-    
+public class NonPositiveWeightException extends RuntimeException {
+
 }
