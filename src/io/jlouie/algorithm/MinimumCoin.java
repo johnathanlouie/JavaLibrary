@@ -28,22 +28,22 @@ import java.util.Set;
  */
 public class MinimumCoin {
 
-    private final Map<Integer, List<Integer>> mem = new HashMap<>();
-    private final Set<Integer> currency;
+    private final Map<Integer, List<Coin>> mem = new HashMap<>();
+    private final Set<Coin> currency;
 
-    public MinimumCoin(Set<Integer> currency) {
+    public MinimumCoin(Set<Coin> currency) {
         this.currency = currency;
     }
 
-    public List<Integer> makeChange(int amount) {
+    public List<Coin> makeChange(int amount) {
         if (amount == 0) {
             return new LinkedList<>();
         }
-        List<Integer> change = null;
+        List<Coin> change = null;
         int min = Integer.MAX_VALUE;
-        for (Integer coin : currency) {
-            if (coin <= amount) {
-                List<Integer> temp = memoize(amount - coin);
+        for (Coin coin : currency) {
+            if (coin.getValue() <= amount) {
+                List<Coin> temp = memoize(amount - coin.getValue());
                 if (temp != null && temp.size() + 1 < min) {
                     change = new LinkedList<>(temp);
                     change.add(coin);
@@ -54,7 +54,7 @@ public class MinimumCoin {
         return change;
     }
 
-    private List<Integer> memoize(int amount) {
+    private List<Coin> memoize(int amount) {
         if (!mem.containsKey(amount)) {
             mem.put(amount, makeChange(amount));
         }
