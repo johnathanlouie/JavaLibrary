@@ -44,7 +44,7 @@ public class MinimumCoin {
         for (Integer coin : currency) {
             if (coin <= amount) {
                 List<Integer> temp = memoize(amount - coin);
-                if (temp.size() + 1 < min) {
+                if (temp != null && temp.size() + 1 < min) {
                     change = new LinkedList<>(temp);
                     change.add(coin);
                     min = change.size();

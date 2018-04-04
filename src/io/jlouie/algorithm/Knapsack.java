@@ -16,7 +16,6 @@
  */
 package io.jlouie.algorithm;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,11 +37,11 @@ public class Knapsack {
                 throw new NonPositiveWeightException();
             }
         }
-        this.items = new ArrayList<>(items);
+        this.items = new LinkedList<>(items);
     }
 
     public List<ValueWeight> pack(int capacity) {
-        if (capacity == 0) {
+        if (capacity < 1) {
             return new LinkedList<>();
         }
         List<ValueWeight> sack = null;
@@ -58,6 +57,9 @@ public class Knapsack {
                     maxValue = value;
                 }
             }
+        }
+        if (sack == null) {
+            return new LinkedList<>();
         }
         return sack;
     }
