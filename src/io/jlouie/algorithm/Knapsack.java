@@ -34,7 +34,7 @@ public class Knapsack {
     public Knapsack(List<ValueWeight> items) {
         for (ValueWeight i : items) {
             if (i.getWeight() < 1) {
-                throw new NonPositiveWeightException();
+                throw new IllegalArgumentException("Nonpositive weight");
             }
         }
         this.items = new LinkedList<>(items);
