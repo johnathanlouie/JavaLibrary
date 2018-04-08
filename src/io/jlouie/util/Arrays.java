@@ -16,10 +16,6 @@
  */
 package io.jlouie.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
  *
  * @author Johnathan Louie
@@ -29,13 +25,11 @@ public final class Arrays {
     private Arrays() {
     }
 
-    public static int[] toIntArray(Collection<Integer> c) {
-        List<Integer> list = new ArrayList<>(c);
-        int[] array = new int[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
+    public static <E> void copy(E[] src, E[] dst) {
+        int size = Math.min(src.length, dst.length);
+        for (int i = 0; i < size; i++) {
+            dst[i] = src[i];
         }
-        return array;
     }
 
 }

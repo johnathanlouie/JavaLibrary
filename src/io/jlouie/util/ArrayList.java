@@ -22,37 +22,43 @@ package io.jlouie.util;
  */
 public class ArrayList<E> implements List<E> {
 
-    private E[] elementData;
-    private int size;
+    private E[] elements;
+    private int size = 0;
     private static final int DEFAULT_CAPACITY = 8;
 
     public ArrayList() {
-        size = 0;
-        elementData = (E[]) new Object[DEFAULT_CAPACITY];
+        elements = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
     @Override
-    public boolean add(E e, int index) {
-        if (isIndexOutOfBounds(index) && !isIndexAtEnd(index)) {
-            return false;
+    public void add(E e, int index) {
+        if (isOutOfBounds(index) && !isEnd(index)) {
+            throw new IndexOutOfBoundsException();
         }
         if (isFull()) {
-            newArray();
+            resize();
         }
-        if (!isIndexAtEnd(index) && !isEmpty()) {
-            shiftElementsUp(index);
+        if (!isEnd(index) && !isEmpty()) {
+            shiftUp(index);
         }
-        elementData[index] = e;
+        elements[index] = e;
         size++;
-        return true;
     }
 
     @Override
     public E get(int index) {
-        if (isIndexOutOfBounds(index)) {
+        if (isOutOfBounds(index)) {
             throw new IndexOutOfBoundsException();
         }
-        return elementData[index];
+        return elements[index];
+    }
+
+    @Override
+    public void set(E e, int index) {
+        if (isOutOfBounds(index)) {
+            throw new IndexOutOfBoundsException();
+        }
+        elements[index] = e;
     }
 
     @Override
@@ -61,53 +67,47 @@ public class ArrayList<E> implements List<E> {
     }
 
     @Override
-    public boolean remove(int index) {
-        if (isIndexOutOfBounds(index)) {
-            return false;
+    public void remove(int index) {
+        if (isOutOfBounds(index)) {
+            throw new IndexOutOfBoundsException();
         }
-        shiftElementsDown(index);
+        shiftDown(index);
         size--;
-        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private boolean isFull() {
-        return size == elementData.length;
+        return size == elements.length;
     }
 
-    private void newArray() {
-        E[] temp = (E[]) new Object[elementData.length * 2];
-        copyAll(elementData, temp);
-        elementData = temp;
+    private void resize() {
+        E[] larger = (E[]) new Object[elements.length * 2];
+        Arrays.copy(elements, larger);
+        elements = larger;
     }
 
-    private void copyAll(E[] src, E[] dest) {
-        for (int i = 0; i < size; i++) {
-            dest[i] = src[i];
-        }
-    }
-
-    private boolean isIndexOutOfBounds(int index) {
+    private boolean isOutOfBounds(int index) {
         return index < 0 || index >= size;
     }
 
-    private boolean isIndexAtEnd(int index) {
+    private boolean isEnd(int index) {
         return index == size;
     }
 
-    private void shiftElementsUp(int index) {
+    private void shiftUp(int index) {
         for (int i = size; i > index; i--) {
-            elementData[i] = elementData[i - 1];
+            elements[i] = elements[i - 1];
         }
     }
 
-    private void shiftElementsDown(int index) {
+    private void shiftDown(int index) {
         for (int i = index; i < size; i++) {
-            elementData[i] = elementData[i + 1];
+            elements[i] = elements[i + 1];
         }
-    }
-
-    private boolean isEmpty() {
-        return size == 0;
     }
 
 }

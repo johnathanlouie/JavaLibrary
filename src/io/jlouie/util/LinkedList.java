@@ -22,41 +22,46 @@ package io.jlouie.util;
  */
 public class LinkedList<E> implements List<E> {
 
-    private ListNode<E> head;
-    private ListNode<E> tail;
-    private int size;
+    private Node<E> head = null;
+    private Node<E> tail = null;
+    private int size = 0;
 
     public LinkedList() {
-        size = 0;
     }
 
     @Override
-    public boolean add(E e, int index) {
-        if (!isIndexAtEnd(index) && isIndexOutOfBounds(index)) {
-            return false;
+    public void add(E e, int index) {
+        if (!isEnd(index) && isOutOfBounds(index)) {
+            throw new IndexOutOfBoundsException();
         }
-        ListNode temp = new ListNode(e);
+        Node node = new Node(e);
         if (index == 0) {
-            temp.attach(null, head);
-            head = temp;
-        }
-        if (isIndexAtEnd(index)) {
-            temp.attach(tail, null);
-            tail = temp;
-        } else if (index != 0) {
-            ListNode old = getNode(index);
-            temp.attach(old, old.getNextNode());
+            node.attach(null, head);
+            head = node;
+        } else if (isEnd(index)) {
+            node.attach(tail, null);
+            tail = node;
+        } else {
+            Node x = getNode(index);
+            node.attach(x.prev(), x);
         }
         size++;
-        return true;
     }
 
     @Override
     public E get(int index) {
-        if (isIndexOutOfBounds(index)) {
+        if (isOutOfBounds(index)) {
             throw new IndexOutOfBoundsException();
         }
-        return getNode(index).getElement();
+        return getNode(index).get();
+    }
+
+    @Override
+    public void set(E e, int index) {
+        if (isOutOfBounds(index)) {
+            throw new IndexOutOfBoundsException();
+        }
+        getNode(index).set(e);
     }
 
     @Override
@@ -65,42 +70,102 @@ public class LinkedList<E> implements List<E> {
     }
 
     @Override
-    public boolean remove(int index) {
-        if (isIndexOutOfBounds(index)) {
-            return false;
+    public void remove(int index) {
+        if (isOutOfBounds(index)) {
+            throw new IndexOutOfBoundsException();
         }
-        ListNode<E> delete = getNode(index);
+        Node<E> node = getNode(index);
         if (index == 0) {
-            head = delete.getNextNode();
+            head = node.next();
+        } else if (index == size - 1) {
+            tail = node.prev();
         }
-        if (index == size - 1) {
-            tail = delete.getPrevNode();
-        }
-        delete.detach();
+        node.detach();
         size--;
-        return true;
     }
 
-    private boolean isIndexOutOfBounds(int index) {
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    private boolean isOutOfBounds(int index) {
         return index < 0 || index >= size;
     }
 
-    private boolean isIndexAtEnd(int index) {
+    private boolean isEnd(int index) {
         return index == size;
     }
 
-    private ListNode<E> getNode(int index) {
-        if (index == size - 1) {
-            return tail;
-        }
-        ListNode node = head;
-        for (int i = 0; node != null; i++) {
-            if (i == index) {
-                return node;
+    private Node<E> getNode(int index) {
+        Node node;
+        if (index <= size / 2) {
+            node = head;
+            for (int i = 0; i < size; i++) {
+                if (i == index) {
+                    return node;
+                }
+                node = node.next();
             }
-            node = node.getNextNode();
+        } else {
+            node = tail;
+            for (int i = size - 1; i >= 0; i--) {
+                if (i == index) {
+                    return node;
+                }
+                node = node.prev();
+            }
         }
-        return null;
+        throw new IndexOutOfBoundsException();
     }
 
+    private class Node<E> {
+
+        private E e = null;
+        private Node prev = null;
+        private Node next = null;
+
+        public Node(E e) {
+            this.e = e;
+        }
+
+        public void set(E e) {
+            this.e = e;
+        }
+
+        public E get() {
+            return e;
+        }
+
+        public Node prev() {
+            return prev;
+        }
+
+        public Node next() {
+            return next;
+        }
+
+        public void attach(Node prev, Node next) {
+            if (prev != null) {
+                prev.next = this;
+            }
+            if (next != null) {
+                next.prev = this;
+            }
+            this.prev = prev;
+            this.next = next;
+        }
+
+        public void detach() {
+            if (prev != null) {
+                prev.next = this.next;
+            }
+            if (next != null) {
+                next.prev = this.prev;
+            }
+            prev = null;
+            next = null;
+        }
+
+    }
 }

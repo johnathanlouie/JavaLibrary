@@ -22,12 +22,16 @@ package io.jlouie.util;
  */
 public interface List<E> {
 
-    boolean add(E e, int index);
+    void add(E e, int index);
 
     E get(int index);
 
+    void set(E e, int index);
+
     int size();
 
-    boolean remove(int index);
+    void remove(int index);
+
+    boolean isEmpty();
 
 }
