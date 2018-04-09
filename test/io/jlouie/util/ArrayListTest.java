@@ -16,7 +16,7 @@
  */
 package io.jlouie.util;
 
-import io.jlouie.util.ArrayList;
+import io.jlouie.datastructure.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
